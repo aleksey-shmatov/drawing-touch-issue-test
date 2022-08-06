@@ -39,6 +39,10 @@ export const Canvas = () => {
 
     const handlePointerDown = useCallback(
         (event: React.MouseEvent) => {
+            if (!canvasRef.current) {
+                return
+            }
+            const canvas = canvasRef.current
             const start = getCanvasPoint(
                 canvasRef.current,
                 event.clientX,
@@ -47,15 +51,15 @@ export const Canvas = () => {
             setCurrentStroke([start])
             const handlePointerMove = (event: MouseEvent) => {
                 const point = getCanvasPoint(
-                    canvasRef.current,
+                    canvas,
                     event.clientX,
                     event.clientY
                 )
-                setCurrentStroke(x => [...x, point])
+                setCurrentStroke(x => x? [...x, point]: [point])
             }
             const handlePointerUp = () => {
                 setCurrentStroke(x => {
-                    setStrokes(strokes => [...strokes, x])
+                    setStrokes(strokes => x? [...strokes, x] : strokes)
                     return null;
                 })
                 document.removeEventListener(
